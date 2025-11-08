@@ -1,1 +1,1 @@
-mineflayer==4.11.0
+mcpi==1.2.1
