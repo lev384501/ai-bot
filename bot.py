@@ -1,79 +1,42 @@
+from mcpi.minecraft import Minecraft
+from mcpi import block
 import time
 import random
 
-class ChatOnlyBot:
+class MCPIBot:
     def __init__(self):
         self.server_ip = "aiserver1245.aternos.me"
-        self.commands = []
+        self.server_port = 23447  # Твой порт!
         
-    def simulate_chat_interaction(self):
-        print("🎮 СИМУЛЯТОР MINECRAFT БОТА")
-        print("📍 Сервер:", self.server_ip)
-        print("==================================")
-        
-        while True:
-            # Показываем текущие команды
-            if self.commands:
-                print(f"\n📨 Очередь команд: {self.commands}")
-                
-            # Симуляция получения новой команды
-            if random.random() < 0.3:  # 30% шанс получить команду
-                new_command = random.choice([
-                    "бот помощь",
-                    "бот иди", 
-                    "бот прыгай",
-                    "бот найди дерево",
-                    "бот говори привет всем!",
-                    "бот строй дом"
-                ])
-                self.commands.append(new_command)
-                print(f"🎯 Получена команда: {new_command}")
-            
-            # Обработка команд
-            if self.commands:
-                command = self.commands.pop(0)
-                self.process_command(command)
-            
-            time.sleep(5)
+    def connect(self):
+        try:
+            print(f"🔗 Подключаюсь к {self.server_ip}:{self.server_port}...")
+            self.mc = Minecraft.create(self.server_ip, self.server_port)
+            print("✅ Успешно подключился к серверу!")
+            return True
+        except Exception as e:
+            print(f"❌ Ошибка подключения: {e}")
+            return False
     
-    def process_command(self, command):
-        cmd = command.lower()
-        
-        if 'бот помощь' in cmd:
-            print("💬 В ЧАТЕ: Доступные команды: 'бот иди', 'бот стой', 'бот прыгай', 'бот найди дерево'")
+    def chat(self, message):
+        try:
+            self.mc.postToChat(message)
+            print(f"💬 Отправил в чат: {message}")
+        except Exception as e:
+            print(f"❌ Ошибка отправки сообщения: {e}")
+    
+    def start(self):
+        if self.connect():
+            self.chat("Привет! Я AI бот! Напиши 'бот помощь'")
             
-        elif 'бот иди' in cmd:
-            print("💬 В ЧАТЕ: Иду вперед! 🚶♂️")
-            print("🔄 ДЕЙСТВИЕ: Двигаюсь вперед 3 секунды...")
-            time.sleep(2)
-            print("🔄 ДЕЙСТВИЕ: Останавливаюсь")
-            
-        elif 'бот прыгай' in cmd:
-            print("💬 В ЧАТЕ: Прыгаю! 🐰")
-            for i in range(3):
-                print(f"🔄 ДЕЙСТВИЕ: Прыжок {i+1}")
-                time.sleep(1)
-                
-        elif 'бот найди дерево' in cmd:
-            print("💬 В ЧАТЕ: Ищу деревья... 🔍")
-            time.sleep(2)
-            if random.random() > 0.5:
-                print("💬 В ЧАТЕ: Нашел дерево! Иду к нему!")
-                print("🔄 ДЕЙСТВИЕ: Подхожу к дереву")
-            else:
-                print("💬 В ЧАТЕ: Деревьев рядом нет 😔")
-                
-        elif 'бот говори' in cmd:
-            text = command.replace('бот говори', '').strip()
-            print(f"💬 В ЧАТЕ: {text}")
-            
-        elif 'бот строй дом' in cmd:
-            print("💬 В ЧАТЕ: Строю дом! 🏠")
-            print("🔄 ДЕЙСТВИЕ: Ставлю блоки...")
-            for i in range(5):
-                print(f"🔄 ДЕЙСТВИЕ: Поставлен блок {i+1}")
-                time.sleep(0.5)
+            # Главный цикл
+            while True:
+                time.sleep(10)
+                # Здесь будет обработка чата
+        else:
+            print("💤 Сервер недоступен")
 
 if __name__ == "__main__":
-    bot = ChatOnlyBot()
-    bot.simulate_chat_interaction()
+    print(f"🎮 MCPI Bot для {self.server_ip}:{self.server_port}")
+    bot = MCPIBot()
+    bot.start()
