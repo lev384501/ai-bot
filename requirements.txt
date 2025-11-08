@@ -1,0 +1,1 @@
+mineflayer==4.11.0
